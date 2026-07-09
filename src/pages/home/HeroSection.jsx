@@ -34,7 +34,6 @@ export default function HeroSection() {
           margin: 0;
           padding: 0;
           overflow-x: hidden;
-          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         @keyframes scroll-right {

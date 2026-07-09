@@ -19,6 +19,7 @@ import GalleryAllByYear from "./pages/gallery/GalleryAllByYear.jsx";
 import EventAnnouncement from "./pages/event/EventAnnouncement.jsx";
 import EventAnnounce from "./pages/event/EventAnnounce.jsx";
 import CreateParticipation from "./pages/participants/create-participant.jsx";
+import EventAnnouncementV2 from "./pages/event/EventAnnouncementV2.jsx";
 
 const Home = lazy(() => import("./pages/home/Home"));
 const Contact = lazy(() => import("./pages/contact/Contact"));
@@ -77,7 +78,7 @@ function App() {
               path="/event"
               element={
                 <Suspense fallback={<SuspenseLoader />}>
-                  <EventAnnouncement />
+                  <EventAnnouncementV2 />
                 </Suspense>
               }
             />

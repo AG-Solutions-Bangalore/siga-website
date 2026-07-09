@@ -105,7 +105,7 @@ export default function Footer() {
     if (!visitorData || !visitorData.data) return [];
 
     return visitorData.data.map((visitor) => ({
-      TotalVisitor: visitor.visitor_tbl_count,
+      TotalVisitor: visitor?.visitor_tbl_count,
     }));
   }, [visitorData]);
 
@@ -297,7 +297,7 @@ export default function Footer() {
             </p>
             <p className="text-sm">
               <span className="block sm:inline">
-                Visitor Count : {vistorCounts[0].TotalVisitor}
+                Visitor Count : {vistorCounts?.[0]?.TotalVisitor}
               </span>
             </p>
             <p className="text-sm">
