@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import RegistrationModal from "@/components/ui/register-modal";
 import { animate, motion, useReducedMotion } from "framer-motion";
-import { Award, Calendar, ChevronRight, Clock, DollarSign, Phone } from "lucide-react";
+import { Award, Calendar, ChevronRight, Clock, DollarSign, Phone, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import BrandLogo from "./BrandLogo";
 import { useQuery } from "@tanstack/react-query";
@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import arch from "../../assets/images/arch.jpg";
 import pathway from "../../assets/images/pathway.jpg";
 import bags from "../../assets/images/bags.jpg";
+import EventHeader from "@/components/EventHeader/EventHeader";
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -45,8 +46,6 @@ export default function EventAnnouncementV2() {
   ];
 
   const [openReg, setOpenReg] = useState(false);
-  const [parallaxY, setParallaxY] = useState(0);
-  const heroRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const navigate = useNavigate();
@@ -98,27 +97,7 @@ export default function EventAnnouncementV2() {
     return () => c.forEach((x) => x.stop && x.stop());
   }, [shouldReduce]);
 
-  useEffect(() => {
-    let raf = null;
-    const onScroll = () => {
-      if (!heroRef.current) return;
-      if (raf) cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const rect = heroRef.current.getBoundingClientRect();
-        const middle = rect.top + rect.height / 2 - window.innerHeight / 2;
-        const mapped = Math.max(-30, Math.min(30, -middle / 15));
-        setParallaxY(mapped);
-      });
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, []);
+
 
   const smoothScrollTo = (id) => {
     const el = document.getElementById(id);
@@ -155,255 +134,7 @@ export default function EventAnnouncementV2() {
 
   return (
     <div className="relative w-full min-h-screen text-slate-900 antialiased overflow-x-hidden">
-      <style>{`
-        @keyframes gradientShift {0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-        .animated-gradient {background: linear-gradient(90deg,#94b9ef,#94b9ef,#94b9ef); background-size:200% 200%; animation: gradientShift 6s ease infinite;}
-        .ripple-circle{position:absolute;border-radius:50%;transform:scale(0);animation:ripple 0.8s linear;background:#94b9ef;pointer-events:none}
-        @keyframes ripple{to{transform:scale(3);opacity:0}}
-        .color-divider{height:6px;border-radius:6px;background:linear-gradient(90deg,#314899,#314899,#314899);background-size:200% 100%;animation:gradientShift 4s linear infinite}
-        .cursive-invitation {
-          font-family: 'Great Vibes', 'Playball', cursive;
-        }
-      `}</style>
-      <div className="color-divider w-full " aria-hidden></div>
-
-      <aside className="fixed right-6 bottom-8 z-50 hidden md:flex flex-col gap-3 items-end">
-        <motion.button
-          onClick={() => setOpenReg(true)}
-          whileHover={{ scale: shouldReduce ? 1 : 1.04 }}
-          whileTap={{ scale: shouldReduce ? 1 : 0.98 }}
-          onMouseDown={ripple}
-          className="flex items-center gap-3 px-4 py-3 rounded-full bg-[#314899] text-white shadow-2xl ring-1 ring-white/10 overflow-hidden"
-        >
-          Quick Register
-        </motion.button>
-
-        <motion.button
-          onClick={() => smoothScrollTo("packages")}
-          whileHover={{ x: shouldReduce ? 0 : -6 }}
-          onMouseDown={ripple}
-          className="px-3 py-2 rounded-full bg-white/90 text-sm text-[#314899] shadow-lg border border-white/20"
-        >
-          View Packages
-        </motion.button>
-      </aside>
-
-      {/* ORIGINAL HEADER COMMENTED OUT AS PER WORKFLOW REQUIREMENTS
-      <header
-        ref={heroRef}
-        className="relative py-25 md:py-24 lg:py-32 px-4 bg-gradient-to-b from-[#c9f7f9] via-[#536999] to-[#394263]"
-      >
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div className="lg:col-span-6">
-              <span className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-gradient-to-r from-[#fff0f0] to-[#fff9f8] text-[#314899] text-sm font-semibold shadow-sm">
-                Autumn Winter
-              </span>
-              <h1 className="mt-6 text-3xl sm:text-4xl lg:text-6xl font-extrabold leading-tight tracking-tight text-white">
-                31st SIGA Fair
-              </h1>
-              <p className="mt-4 text-sm sm:text-base text-white max-w-xl">
-                Organized by{" "}
-                <strong className="font-semibold text-white">
-                  South India Garments Association (SIGA)
-                </strong>
-                . Join 100+ brands showcasing their latest Autumn Winter
-                Collections.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3 items-center">
-                <motion.button
-                  onClick={() => {
-                    navigate("/participants-form");
-                  }}
-                  whileHover={{ scale: shouldReduce ? 1 : 1.035 }}
-                  whileTap={{ scale: shouldReduce ? 1 : 0.985 }}
-                  onMouseDown={ripple}
-                  className="relative inline-flex items-center gap-3 px-5 py-3 bg-gradient-to-r from-[#ffffff] to-[#ffffff] text-[#394263] rounded-full shadow-2xl font-semibold focus:outline-none overflow-hidden"
-                >
-                  Book Now
-                </motion.button>
-
-                <div className="ml-0 sm:ml-2 text-sm text-white w-full sm:w-auto">
-                  Or call : <strong className="text-white">96326 48525</strong>
-                </div>
-              </div>
-              <div className="m-2 mt-5 text-white">VISITORS : </div>
-              <div className="flex flex-wrap gap-2 md:w-[80%] w-full ">
-                <span className="px-3 py-1 rounded-full bg-white/90 border border-[#fcfdf9] shadow-sm text-xs">
-                  Retail stores
-                </span>
-                <span className="px-3 py-1 rounded-full bg-white/90 border border-[#fcfdf9] shadow-sm text-xs">
-                  Online Sellers
-                </span>
-                <span className="px-3 py-1 rounded-full bg-white/90 border border-[#fcfdf9] shadow-sm text-xs">
-                  Buying House
-                </span>
-                <span className="px-3 py-1 rounded-full bg-white/90 border border-[#fcfdf9] shadow-sm text-xs">
-                  Wholesalers
-                </span>
-                <span className="px-3 py-1 rounded-full bg-white/90 border border-[#fcfdf9] shadow-sm text-xs">
-                  Large Format Stores
-                </span>
-                <span className="px-3 py-1 rounded-full bg-white/90 border border-[#fcfdf9] shadow-sm text-xs">
-                  Distributors
-                </span>
-                <span className="px-3 py-1 rounded-full bg-white/90 border border-[#fcfdf9] shadow-sm text-xs">
-                  Agents
-                </span>
-              </div>
-              <div
-                className="mt-6 w-36 h-2 rounded-full animated-gradient"
-                aria-hidden
-              ></div>
-            </div>
-
-            <div className="lg:col-span-6 relative">
-              <div
-                style={{ transform: `translateY(${parallaxY * 0.45}px)` }}
-                className="relative rounded-3xl overflow-hidden shadow-[0_30px_60px_rgba(199,46,72,0.12)]"
-              >
-                <img
-                  src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&auto=format&fit=crop&q=80"
-                  alt="Fashion Exhibition"
-                  className="w-full h-[320px] sm:h-[420px] md:h-[520px] object-cover block"
-                  loading="lazy"
-                />
-
-                <svg
-                  viewBox="0 0 1200 120"
-                  preserveAspectRatio="none"
-                  className="absolute -bottom-1 left-0 w-full h-12 opacity-80"
-                >
-                  <path
-                    d="M0,0 C150,100 350,0 600,50 C850,100 1050,10 1200,80 L1200,0 L0,0 Z"
-                    fill="#fff"
-                    opacity="0.65"
-                  />
-                </svg>
-
-                <div className="absolute top-5 left-5 bg-gradient-to-r from-white/20 to-white/5 rounded-lg px-3 py-1 backdrop-blur-sm text-white text-sm">
-                  Palace Grounds, Bangalore • 28 - 30 Jul 2026
-                </div>
-
-                <div className="absolute left-4 top-8 w-16 h-16 rounded-full bg-gradient-to-br from-[#CE1446] to-[#B2192B] opacity-20 blur-xl" />
-                <div className="absolute right-6 top-16 w-12 h-12 rounded-full bg-gradient-to-br from-[#D9737D] to-[#CE1446] opacity-18 blur-md" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-      */}
-
-      {/* NEW ACTIVE HEADER */}
-      <header
-        ref={heroRef}
-        className="relative py-25 md:py-24 lg:py-32 px-4 bg-gradient-to-b from-[#c9f7f9] via-[#536999] to-[#394263]"
-      >
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            
-            {/* Left Column: Premium Text & CTAs */}
-            <div className="lg:col-span-6">
-              <span className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-gradient-to-r from-[#fff0f0] to-[#fff9f8] text-[#314899] text-sm font-semibold shadow-sm">
-                Autumn Winter
-              </span>
-              
-              <h1 className="mt-6 text-3xl sm:text-4xl lg:text-6xl font-extrabold leading-tight tracking-tight text-white flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <span>31st SIGA Fair</span>
-                <span className="cursive-invitation text-amber-300 text-4xl sm:text-5xl lg:text-7xl font-normal drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]">
-                  Invitation
-                </span>
-              </h1>
-              
-              <div className="mt-6 space-y-4 text-sm sm:text-base text-white/90 leading-relaxed max-w-xl">
-                <p>
-                  Organized by the <strong className="font-semibold text-white">South India Garments Association (SIGA)</strong>, the 31st SIGA Fair stands as the ultimate B2B sourcing destination for apparel retailers, wholesalers, and distributors.
-                </p>
-                <p>
-                  This season, over <strong className="font-semibold text-white">100+ leading apparel brands</strong> will showcase their exclusive Autumn Winter collections under one roof. It is a premier event designed to elevate business prospects, unveil emerging fashion trends, and enable high-value networking.
-                </p>
-                <p>
-                  We cordially invite you to join us at Palace Grounds, Bangalore to explore the collections, connect directly with manufacturers, and build lucrative partnerships for the upcoming season.
-                </p>
-              </div>
-              
-              {/* Premium Styled Buttons */}
-              <div className="mt-8 flex flex-col gap-4">
-                <div className="flex flex-wrap items-center gap-3">
-                  <motion.a
-                    href="https://www.sigafair.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: shouldReduce ? 1 : 1.035 }}
-                    whileTap={{ scale: shouldReduce ? 1 : 0.985 }}
-                    onMouseDown={ripple}
-                    className="relative inline-flex items-center justify-center gap-3 px-6 py-3.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 rounded-full shadow-2xl font-bold transition-all focus:outline-none overflow-hidden text-center text-sm"
-                  >
-                    Pre Register Now
-                  </motion.a>
-
-                  <motion.a
-                    href="tel:9632648525"
-                    whileHover={{ scale: shouldReduce ? 1 : 1.035 }}
-                    whileTap={{ scale: shouldReduce ? 1 : 0.985 }}
-                    className="inline-flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white rounded-full font-semibold shadow-lg text-xs border border-emerald-400/20 text-center"
-                  >
-                    <Phone size={12} className="animate-pulse" />
-                    <span>Call: 96326 48525</span>
-                  </motion.a>
-                </div>
-
-                {/* Second row: Download Invitation text link */}
-                <div className="mt-1">
-                  <a
-                    href="https://southindiagarmentsassociation.com/crmapi/public/assets/images/pdf/Siga-invite.pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-white/80 hover:text-amber-300 text-sm font-semibold transition-colors group underline decoration-white/20 hover:decoration-amber-300/40 underline-offset-4"
-                  >
-                    <svg
-                      className="w-4 h-4 text-amber-300 transition-transform group-hover:translate-y-0.5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      strokeWidth="2"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                      />
-                    </svg>
-                    <span>Download Invitation</span>
-                  </a>
-                </div>
-              </div>
-
-
-            </div>
-
-            {/* Right Column: Premium Image Card (Portrait Invitation Card Floating directly) */}
-            <div className="lg:col-span-6 relative flex justify-center lg:justify-end">
-              <div
-                style={{ transform: `translateY(${parallaxY * 0.3}px)` }}
-                className="relative rounded-2xl overflow-hidden shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] border border-white/20 max-w-[420px] w-full transition-transform duration-500 hover:scale-[1.02] bg-white/5 backdrop-blur-sm"
-              >
-                <img
-                  src="https://southindiagarmentsassociation.com/crmapi/public/assets/images/invite.jpg"
-                  alt="31st SIGA Fair Invitation Flyer"
-                  className="w-full h-auto block"
-                  loading="lazy"
-                />
-
-                <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md rounded-full px-4 py-1.5 text-white text-xs font-semibold tracking-wide border border-white/10 shadow-lg">
-                  Palace Grounds, Bangalore • 28 - 30 Jul 2026
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </header>
+      <EventHeader />
 
       <div className="mx-auto max-w-7xl px-4 md:px-10 -mt-6">
         <div className="color-divider w-full rounded-lg" aria-hidden></div>
